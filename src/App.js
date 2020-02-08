@@ -18,29 +18,29 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState({});
 
-  useEffect(()=> {
-    if(!firebase.apps.length){
-      firebase.initializeApp(firebaseConfig);
-    }
-    firebase
-      .auth()
-      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
-      .catch(function (error) {
-        console.log('error', error);
-    });
-  }, [firebaseConfig]);
+  // useEffect(()=> {
+  //   if(!firebase.apps.length){
+  //     firebase.initializeApp(firebaseConfig);
+  //   }
+  //   firebase
+  //     .auth()
+  //     .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+  //     .catch(function (error) {
+  //       console.log('error', error);
+  //   });
+  // }, [firebaseConfig]);
 
-  useEffect(()=>{
-    firebase.auth().onAuthStateChanged(function(user){
-      if (user){
-        setLoggedIn(true);
-        setUser(user);
-      }else{
-        setLoggedIn(false);
-        setUser({});
-      }
-    });
-  }, [])
+  // useEffect(()=>{
+  //   firebase.auth().onAuthStateChanged(function(user){
+  //     if (user){
+  //       setLoggedIn(true);
+  //       setUser(user);
+  //     }else{
+  //       setLoggedIn(false);
+  //       setUser({});
+  //     }
+  //   });
+  // }, [])
 
   function signUpFunction(e){
     e.preventDefault();
@@ -86,7 +86,7 @@ function App() {
       <Header loggedIn={loggedIn} logoutFunction={logoutFunction}/>
       <BrowserRouter>
         <Route exact path="/">
-          { loggedIn ? <Profile user = {user} /> : <Home/> }
+          { loggedIn ? <Profile/> : <Home/> }
         </Route>
         <Route exact path="/sign-up">
           { loggedIn ?  <Redirect to='/' /> : <Signup signUpFunction = {signUpFunction}/> }
@@ -95,7 +95,7 @@ function App() {
           {loggedIn ? <Redirect to='/' /> : <Login logInFunction = {logInFunction}/> }
         </Route>
         <Route exact path="/profile">
-        { loggedIn ?  <Profile user = {user} /> : <Login logInFunction={logInFunction}/> }
+        { loggedIn ?  <Profile/> : <Login logInFunction={logInFunction}/> }
         </Route>
       </BrowserRouter>
     </div>

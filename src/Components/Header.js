@@ -6,7 +6,6 @@ export default function Header({loggedIn, logoutFunction}){
             {/* <img src={Logo} alt='logo'/> */}
             <nav>
                 {loggedIn && <a onClick={() =>logoutFunction()}>Log Out</a>}
-                {loggedIn && <a href = "/make-post">Post</a>}
                 {loggedIn && <a href='/'>Home</a>}
                 {!loggedIn &&<a href='/login'>Login</a>}
                 {!loggedIn && <a href='/sign-up'>Sign Up</a>}
