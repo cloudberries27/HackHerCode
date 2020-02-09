@@ -3,12 +3,14 @@ import { Route, BrowserRouter, Redirect } from 'react-router-dom';
 import './App.css';
 import * as firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/database";
 
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import Signup from './Pages/SignUp';
 import Profile from './Pages/Profile';
 import Header from './Components/Header';
+import MatchMe from './Pages/Matchme';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDSPDmP77lcjdJk8vRGTCPgG84xkEfNUFU",
@@ -22,6 +24,7 @@ const firebaseConfig = {
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
 
   useEffect(()=> {
     if(!firebase.apps.length){
@@ -39,23 +42,32 @@ function App() {
     firebase.auth().onAuthStateChanged(function(user){
       if (user){
         setLoggedIn(true);
+        setUser(user);
       }else{
         setLoggedIn(false);
+        setUser({});
       }
     });
   }, [])
+ 
 
   function signUpFunction(e){
     e.preventDefault();
+    var db = firebase.database();
+    let username = e.currentTarget.createUsername.value;
     let email = e.currentTarget.createEmail.value;
     let password = e.currentTarget.createPassword.value;
+    let data = {
+      userName: username,
+      email: email
+    };
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(function(response){
         setLoggedIn(true);
-      })
-      .catch(function(error) {
+        db.collection("users").doc(response.user.uid).set(data);
+      }).catch(function(error) {
         console.log('error',error);
     });
   }
@@ -90,7 +102,7 @@ function App() {
       <Header loggedIn={loggedIn} logoutFunction={logoutFunction}/>
       <BrowserRouter>
         <Route exact path="/">
-        { loggedIn ? <Profile/> : <Home/> }
+        { loggedIn ? <Profile user={user}/> : <Home/> }
         </Route>
         <Route exact path="/sign-up">
         {loggedIn ?  <Redirect to='/' /> : <Signup signupFunction={signUpFunction}/> }
@@ -99,7 +111,10 @@ function App() {
         {loggedIn ? <Redirect to='/' /> : <Login loginFunction={logInFunction}/> }
         </Route>
         <Route exact path="/profile">
-        { loggedIn ?  <Profile/> : <Login loginFunction={logInFunction}/> }
+        { loggedIn ?  <Profile user={user}/> : <Login loginFunction={logInFunction}/> }
+        </Route>
+        <Route exact path="/match-me">s
+        { loggedIn ?  <MatchMe user={user}/> : <Home/> }
         </Route>
       </BrowserRouter>
     </div>
