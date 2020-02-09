@@ -117,6 +117,9 @@ function App() {
         { loggedIn ?  <MatchMe user={user}/> : <Home/> }
         </Route>
       </BrowserRouter>
+      <footer>
+      Proudly made with LOVE by Claudia Rodriguez, Amanda Slocomb, Kem Nguyen-Le, and Khanh Nham Bao at Hack(H)er 2020
+      </footer>
     </div>
   );
 }
